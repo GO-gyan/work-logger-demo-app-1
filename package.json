@@ -1,0 +1,26 @@
+{
+  "name": "work-logger-demo-app-1",
+  "version": "1.0.0",
+  "description": "Demo app for practice graphql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "babel-watch ./server/"
+  },
+  "keywords": [
+    "GraphQL"
+  ],
+  "author": "Gobinda Thakur",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^14.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-watch": "^2.0.7"
+  }
+}
