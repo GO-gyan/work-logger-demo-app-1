@@ -10,24 +10,15 @@ export default new GraphQLObjectType({
     fields: {
         id: {
             type: GraphQLID,
-            description: `User's ID`,
-            resolve: (user) => {
-                return user.id;
-            }
+            description: `User's ID`
         },
         name: {
             type: GraphQLString,
-            description: `User's full name`,
-            resolve: (user) => {
-                return user.name;
-            }
+            description: `User's full name`
         },
         email: {
             type: GraphQLString,
-            description: `User's email`,
-            resolve: (user) => {
-                return user.email;
-            }
+            description: `User's email`
         }
     }
 })
