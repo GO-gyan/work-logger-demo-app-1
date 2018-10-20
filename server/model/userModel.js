@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt-nodejs');
-//const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -8,7 +7,14 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
     name: String,
     email: String,
-    password: String
+    password: String,
+    clients: [{
+      type: Schema.Types.ObjectId,
+      ref: 'client'
+    }]
+},
+{
+  usePushEach: true
 });
 
 // The user's password is never saved in plain text.  Prior to saving the
@@ -39,5 +45,35 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
     cb(err, isMatch);
   });
 };
+
+UserSchema.static.addClient = function(clientDetail) {
+  const Client = mongoose.model('client');
+
+  return this.findById(id)
+    .then(user => {
+      const client = new Client(
+        { 
+          companyName: clientDetail.companyName, 
+          name: clientDetail.name,
+          email: clientDetail.email,
+          phone: clientDetail.phone,
+          language: clientDetail.language,
+          currency: clientDetail.currency,
+          notes: clientDetail.notes,
+          user 
+        }
+      );
+      console.log(user);
+      user.clents.push(client);
+      return Promise.all([client.save(), user.save()])
+        .then(([client, user]) => client);
+    });
+};
+
+UserSchema.statics.findClients = function(id) {
+  return this.findById(id)
+    .populate('client')
+    .then(user => user.clients);
+}
 
 mongoose.model('user', UserSchema);
