@@ -46,7 +46,7 @@ UserSchema.methods.comparePassword = function comparePassword(candidatePassword,
   });
 };
 
-UserSchema.static.addClient = function(clientDetail) {
+UserSchema.statics.addClient = function(id, clientDetail) {
   const Client = mongoose.model('client');
 
   return this.findById(id)
@@ -63,8 +63,7 @@ UserSchema.static.addClient = function(clientDetail) {
           user 
         }
       );
-      console.log(user);
-      user.clents.push(client);
+      user.clients.push(client);
       return Promise.all([client.save(), user.save()])
         .then(([client, user]) => client);
     });
@@ -72,7 +71,7 @@ UserSchema.static.addClient = function(clientDetail) {
 
 UserSchema.statics.findClients = function(id) {
   return this.findById(id)
-    .populate('client')
+    .populate('clients')
     .then(user => user.clients);
 }
 

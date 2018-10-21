@@ -31,12 +31,12 @@ function addUser({ name, email, password, req }) {
           resolve(user);
         });
       });
-  }
+}
 
-function addClient(client) {
-  if (!client) { throw new Error('Can not add client without any values'); }
+function addClient(userId, client) {
+  if (!userId) { throw new Error('Can not add client without user'); }
   
-  return User.addClient(client)
+  return User.addClient(userId, client)
     .then(client => {
       return new Promise((resolve, reject) => {
           /*req.logIn(user, (err) => {

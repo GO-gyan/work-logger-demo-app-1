@@ -11,7 +11,7 @@ const AddressSchema = new Schema({
     client: {
         type: Schema.Types.ObjectId,
         ref: 'client'
-    },
+    }
 });
 
 mongoose.model('address', AddressSchema);

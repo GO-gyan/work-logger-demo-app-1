@@ -2,11 +2,15 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const AssignmentSchema = new Schema({
-    name: String,
+    title: String,
     description: String,
-    status: String,
-    charges: String,
+    status: { type: String, default: 'CREATED' },
+    charges: Number,
     chargeType: String,
+    client: {
+        type: Schema.Types.ObjectId,
+        ref: 'client'
+    },
     works: [{
         type: Schema.Types.ObjectId,
         ref: 'work'

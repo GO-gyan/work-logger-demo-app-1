@@ -20,17 +20,13 @@ const ClientSchema = new Schema({
     assignments: [{
       type: Schema.Types.ObjectId,
       ref: 'assignment'
-    }],
-    invoices: [{
-        type: Schema.Types.ObjectId,
-        ref: 'invoice'
-    }],
+    }]
 },
 {
   usePushEach: true
 });
 
-ClientSchema.static.addAddress = (addressDetail) => {
+ClientSchema.statics.addAddress = function(id, addressDetail) {
     const Address = mongoose.model('address');
   
     return this.findById(id)
@@ -49,8 +45,41 @@ ClientSchema.static.addAddress = (addressDetail) => {
         console.log(client);
         client.addresses.push(address);
         return Promise.all([address.save(), client.save()])
-          .then(([address, client]) => client);
+          .then(([address, client]) => address);
       });
 };
+
+ClientSchema.statics.addAssignment = function(id, assignmentDetail) {
+    const Assignment = mongoose.model('assignment');
+  
+    return this.findById(id)
+      .then(client => {
+        const assignment = new Assignment(
+          { 
+            name: assignmentDetail.name,
+            description: assignmentDetail.description,
+            charges: assignmentDetail.charges,
+            chargeType: assignmentDetail.chargeType,
+            client
+          }
+        );
+        console.log(client);
+        client.assignments.push(assignment);
+        return Promise.all([assignment.save(), client.save()])
+          .then(([assignment, client]) => assignment);
+      });
+};
+
+ClientSchema.statics.findAddresses = function(id) {
+    return this.findById(id)
+      .populate('addresses')
+      .then(client => client.addresses);
+}
+
+ClientSchema.statics.findAssignments = function(id) {
+    return this.findById(id)
+      .populate('assignments')
+      .then(client => client.assignments);
+}
 
 mongoose.model('client', ClientSchema);

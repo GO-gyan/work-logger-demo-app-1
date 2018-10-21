@@ -7,13 +7,13 @@ const InvoiceSchema = new Schema({
     totalTime: { type: Number, default: 0 },
     totalAmount: { type: Number, default: 0 },
     amountPaid: Number,
-    status: { type: String, default: 'NEW'}
+    status: { type: String, default: 'CREATED'}
 });
 
 InvoiceSchema.statics.balanceAmount = function(id) {
     const Invoice = mongoose.model('invoice');
   
-    return Invoice.findById(id)
+    return this.findById(id)
       .then(invoice => {
           const balance = invoice.totalAmount - invoice.amountPaid;
           return balance;
