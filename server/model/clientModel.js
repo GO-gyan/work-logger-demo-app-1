@@ -42,7 +42,6 @@ ClientSchema.statics.addAddress = function(id, addressDetail) {
             client
           }
         );
-        console.log(client);
         client.addresses.push(address);
         return Promise.all([address.save(), client.save()])
           .then(([address, client]) => address);
@@ -56,14 +55,13 @@ ClientSchema.statics.addAssignment = function(id, assignmentDetail) {
       .then(client => {
         const assignment = new Assignment(
           { 
-            name: assignmentDetail.name,
+            title: assignmentDetail.title,
             description: assignmentDetail.description,
             charges: assignmentDetail.charges,
             chargeType: assignmentDetail.chargeType,
             client
           }
         );
-        console.log(client);
         client.assignments.push(assignment);
         return Promise.all([assignment.save(), client.save()])
           .then(([assignment, client]) => assignment);
