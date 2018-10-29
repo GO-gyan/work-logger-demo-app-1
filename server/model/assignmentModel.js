@@ -45,22 +45,34 @@ AssignmentSchema.statics.addWork = function(id, worksDetail) {
 
 AssignmentSchema.statics.addInvoice = function(id, invoiceDetail) {
     const Invoice = mongoose.model('invoice');
-  
+    const Work = mongoose.model('work');
+    
     return this.findById(id)
       .then(assignment => {
-        const invoice = new Invoice(
-          { 
-            description: invoiceDetail.description,
-            date: invoiceDetail.date, 
-            totalTime: invoiceDetail.totalTime,
-            totalAmount: invoiceDetail.totalAmount,
-            amountPaid: invoiceDetail.amountPaid,
-            assignment
-          }
-        );
-        assignment.invoices.push(invoice);
-        return Promise.all([invoice.save(), assignment.save()])
-          .then(([invoice, assignment]) => invoice);
+        const { works } = assignment;
+        const workPromise = works.map(element => {
+          const { id } = element;
+          return Work.findById(id);
+        });
+        return Promise.all(workPromise)
+          .then(workArray => {
+            const totalTime = workArray.reduce((result, curr) => {
+              result = result + curr.noOfHours;
+              return result;
+            }, 0);
+            const totalAmount = totalTime * assignment.charges;
+            const invoice = new Invoice(
+              { 
+                description: invoiceDetail.description,
+                totalTime,
+                totalAmount,
+                assignment
+              }
+            );
+            assignment.invoices.push(invoice);
+            return Promise.all([invoice.save(), assignment.save()])
+              .then(([invoice, assignment]) => invoice);
+          });
       });
 };
 

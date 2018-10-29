@@ -3,16 +3,19 @@ const Schema = mongoose.Schema;
 
 const InvoiceSchema = new Schema({
     description: String,
-    date: String,
+    date: { type: Date, default: Date.now },
     totalTime: { type: Number, default: 0 },
-    totalAmount: { type: Number, default: 0 },
-    amountPaid: Number,
-    status: { type: String, default: 'CREATED'}
+    totalAmount: Number,
+    amountPaid: { type: Number, default: 0 },
+    status: { type: String, default: 'CREATED'},
+    assignment: {
+        type: Schema.Types.ObjectId,
+        ref: 'assignment'
+    },
 });
 
 InvoiceSchema.statics.balanceAmount = function(id) {
-    const Invoice = mongoose.model('invoice');
-  
+
     return this.findById(id)
       .then(invoice => {
           const balance = invoice.totalAmount - invoice.amountPaid;
